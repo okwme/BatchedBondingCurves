@@ -1,42 +1,17 @@
-## Truffle Shavings
 
-![](https://github.com/okwme/truffle-shavings/blob/master/box-img-lg.png?raw=true)
-### Truffle Boilerplate with solium, linguist, zeppelin, migrations, tests &tc
 
-## Install
-```
-git clone git@github.com:okwme/truffle-shavings.git
-cd truffle shavings
-yarn
+this repo begins with the problem of front-running bonding curve token transactions. There are a number of ways to mitigate this risk. One method is including a `minReturn` amount that cancels an order if the results are not expected (a symptom of a front running scenario). This however is a UX problem as a user will be faced with a canceled order in the event someone attempted to front run them, when really they just wanted an order to go through. Another solution is to make a fixed `gasPrice` where each transaction is forced to have the same amount of gas. This would prevent nefarious transactions from getting preference from miners in order to jump the line in the block order and front run orders. This would be a moot point if it were the miners themselves who were doing the front running, as they could always give preference to their own transactions. Furthermore it creates developer overhead to keep track of average gas prices so you don't force a user to use a price which will never be accepted, or you force a user to waste money on an overinflated gas price.
 
-or 
+The real front-running scenario that began the thought process around this repo was with regard to continuous organizations like apiary and c-org's designs. In these models you have something like dividends which are meant to be given to token holders in discreet moments. If these dividends are distributed by injecting collateral directly into the contract so that each token in circulation is instantly made a little more valuable, you open yourself up to users front-running that event. If they know the value of the token is about to increase in a specific block, they can buy a large amount right before the collateral injection, and sell immediately following the collateral injection. This would guarantee a profit and prevent the dividends from reaching the rest of the token holders.
 
-npx truffle unbox okwme/truffle-shavings
+**One solution would be to batch buy and sell orders so that there is no front running. instead, all buys and sells over a span of blocks are averaged out and distributed at the same price across the group. This is a repo outlining some code to do just that scenario.**
 
-// then create a .env file that looks like this:
+so there's a problem with an average price per token if some are selling by # of tokens and some are buying by some amount of collateral. The order of these transactions will impact the total price. Alternatively you could force buyers to denote how many tokens they want to buy, instead of how much collateral they want to spend. This would mean that the average price would be the same no matter what the order of transactions. Unfortunately a new problem would occur, the users who were buying tokens would have no idea how much they were signing up to pay for some number of tokens. It's one thing to limit your buy to an amount you're willing to spend, but it's another to force a user to pay whatever the price ends up being after all is said and done. this might work in a dutch auction, but in that scenario a buyer at least knows the minimum return to expect. That's not the case here and so it opens them up to unpredictable spend amounts.
 
-TRUFFLE_MNEMONIC=candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
-GANACHE_MNEMONIC=grid voyage cream cry fence load stove sort grief fuel room save
-TESTNET_MNEMONIC=a twelve word mnemonic phrase that works with some test network buddy
-INFURA_API_KEY=yOUrInfURaKEy
+If we go back to buyers spending collateral and sellers selling a number tokens, we get different cost amounts depending on the order that we calculate. We could batch all the buys and sells separately and then force them to be in a consistent order, but what would this achieve? It would at lease enforce a consistent final price when crunching all the numbers. As it stands with mixed buys and sells the final price will be different each time. In this scenario there is still the decision, should the buys be calculated first or should the sells be? The final price would be the same, but the benefits would not be shared equally.
 
-```
+If the sell orders were positioned first, each sell order would progressively lower the global price per token. They would finish their orders and the buyers in line would stand to benefit far greater than the sellers from this new low starting price. They may buy up the prices, effectively replacing the sellers to some degree. This would reward buyers (who one could argue should be rewarded since they are bringing money into the system instead of exiting). This might also prevent an unfair exit event in which all users are racing to get out as soon as possible. All sellers exiting would be treated equally in this scenario.
 
-## Run
-```
-yarn lint:watch
-```
+In the case where the buys were calculated first, the price per token would have increased by the end of the transactions. This would mean that the sellers who would follow would be happily surprised to see that their previously calculated sell price would be actually improved by that activity. All of the new collateral injected by the buyers would be effectively transferred to the sellers, who are not contributing to the system since they remove capital with them when they leave.
 
-## Test
-```
-truffle develop
-yarn test
-```
-
-## Deploy
-```
-truffle develop
-yarn deploy --network develop
-
-// this just runs truffle migrate --reset --compile-all
-```
+In conclusion, it would make sense to combine all the sells into one order, then split it among the participants of the sell. Then combine all of the buy orders into one, then split it among the buyers. This would create a consistent and fair pricing mechanism. Furthermore it would position buyers to benefit from the group action over sellers, who should not be, in general, further rewarded while exiting. This entire mechanism would remove the ability to front run orders, while also preventing massive slippage between orders during a mass exit.
