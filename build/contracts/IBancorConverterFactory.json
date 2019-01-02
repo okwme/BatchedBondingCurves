@@ -42,9 +42,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.24;\nimport '../../token/interfaces/IERC20Token.sol';\nimport '../../token/interfaces/ISmartToken.sol';\nimport '../../utility/interfaces/IContractRegistry.sol';\n\n/*\n    Bancor Converter Factory interface\n*/\ncontract IBancorConverterFactory {\n    function createConverter(\n        ISmartToken _token,\n        IContractRegistry _registry,\n        uint32 _maxConversionFee,\n        IERC20Token _connectorToken,\n        uint32 _connectorWeight\n    )\n    public returns (address);\n}\n",
-  "sourcePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverterFactory.sol",
+  "sourcePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverterFactory.sol",
   "ast": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverterFactory.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverterFactory.sol",
     "exportedSymbols": {
       "IBancorConverterFactory": [
         6703
@@ -65,7 +65,7 @@
         "src": "0:24:10"
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/IERC20Token.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/IERC20Token.sol",
         "file": "../../token/interfaces/IERC20Token.sol",
         "id": 6685,
         "nodeType": "ImportDirective",
@@ -76,7 +76,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/ISmartToken.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/ISmartToken.sol",
         "file": "../../token/interfaces/ISmartToken.sol",
         "id": 6686,
         "nodeType": "ImportDirective",
@@ -87,7 +87,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractRegistry.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractRegistry.sol",
         "file": "../../utility/interfaces/IContractRegistry.sol",
         "id": 6687,
         "nodeType": "ImportDirective",
@@ -311,7 +311,7 @@
     "src": "0:497:10"
   },
   "legacyAST": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverterFactory.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverterFactory.sol",
     "exportedSymbols": {
       "IBancorConverterFactory": [
         6703
@@ -332,7 +332,7 @@
         "src": "0:24:10"
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/IERC20Token.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/IERC20Token.sol",
         "file": "../../token/interfaces/IERC20Token.sol",
         "id": 6685,
         "nodeType": "ImportDirective",
@@ -343,7 +343,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/ISmartToken.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/ISmartToken.sol",
         "file": "../../token/interfaces/ISmartToken.sol",
         "id": 6686,
         "nodeType": "ImportDirective",
@@ -354,7 +354,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractRegistry.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractRegistry.sol",
         "file": "../../utility/interfaces/IContractRegistry.sol",
         "id": 6687,
         "nodeType": "ImportDirective",
@@ -582,6 +582,6 @@
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "2.0.1",
-  "updatedAt": "2018-12-19T15:23:21.444Z"
+  "schemaVersion": "3.0.0-beta.0",
+  "updatedAt": "2019-01-02T14:26:53.688Z"
 }

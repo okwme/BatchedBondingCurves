@@ -178,9 +178,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.24;\n\n/*\n    ERC20 Standard Token interface\n*/\ncontract IERC20Token {\n    // these functions aren't abstract since the compiler emits automatically generated getter functions as external\n    function name() public view returns (string) {}\n    function symbol() public view returns (string) {}\n    function decimals() public view returns (uint8) {}\n    function totalSupply() public view returns (uint256) {}\n    function balanceOf(address _owner) public view returns (uint256) { _owner; }\n    function allowance(address _owner, address _spender) public view returns (uint256) { _owner; _spender; }\n\n    function transfer(address _to, uint256 _value) public returns (bool success);\n    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);\n    function approve(address _spender, uint256 _value) public returns (bool success);\n}\n",
-  "sourcePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/IERC20Token.sol",
+  "sourcePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/IERC20Token.sol",
   "ast": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/IERC20Token.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/IERC20Token.sol",
     "exportedSymbols": {
       "IERC20Token": [
         8423
@@ -1076,7 +1076,7 @@
     "src": "0:890:26"
   },
   "legacyAST": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/IERC20Token.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/IERC20Token.sol",
     "exportedSymbols": {
       "IERC20Token": [
         8423
@@ -1976,6 +1976,6 @@
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "2.0.1",
-  "updatedAt": "2018-12-19T15:23:21.452Z"
+  "schemaVersion": "3.0.0-beta.0",
+  "updatedAt": "2019-01-02T14:26:53.700Z"
 }

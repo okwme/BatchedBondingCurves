@@ -15,12 +15,12 @@ module.exports = {
       network_id: 4447
     },
     ganache: {
-      provider() {
-        return new HDWalletProvider(
-          process.env.GANACHE_MNEMONIC,
-          'http://localhost:7545'
-        )
-      },
+      // provider() {
+      //   return new HDWalletProvider(
+      //     process.env.GANACHE_MNEMONIC,
+      //     'http://localhost:7545'
+      //   )
+      // },
       host: 'localhost',
       port: 7545,
       network_id: 5777,

@@ -8,14 +8,14 @@
       "type": "constructor"
     }
   ],
-  "bytecode": "0x6080604052348015600f57600080fd5b50603580601d6000396000f3006080604052600080fd00a165627a7a72305820ae153712c70b1887b91033c91c784f270b5edd1a8fb48e8e5cdd65926df505030029",
-  "deployedBytecode": "0x6080604052600080fd00a165627a7a72305820ae153712c70b1887b91033c91c784f270b5edd1a8fb48e8e5cdd65926df505030029",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603580601d6000396000f3006080604052600080fd00a165627a7a72305820fb5ee61ba880ca28875af7a66b263ba673063d2f209c8918218347e6a21f976e0029",
+  "deployedBytecode": "0x6080604052600080fd00a165627a7a72305820fb5ee61ba880ca28875af7a66b263ba673063d2f209c8918218347e6a21f976e0029",
   "sourceMap": "65:1674:34:-;;;121:28;8:9:-1;5:2;;;30:1;27;20:12;5:2;121:28:34;65:1674;;;;;;",
   "deployedSourceMap": "65:1674:34:-;;;;;",
   "source": "pragma solidity ^0.4.24;\n\n/*\n    Utilities & Common Modifiers\n*/\ncontract Utils {\n    /**\n        constructor\n    */\n    constructor() public {\n    }\n\n    // verifies that an amount is greater than zero\n    modifier greaterThanZero(uint256 _amount) {\n        require(_amount > 0);\n        _;\n    }\n\n    // validates an address - currently only checks that it isn't null\n    modifier validAddress(address _address) {\n        require(_address != address(0));\n        _;\n    }\n\n    // verifies that the address is different than this contract address\n    modifier notThis(address _address) {\n        require(_address != address(this));\n        _;\n    }\n\n    // Overflow protected math functions\n\n    /**\n        @dev returns the sum of _x and _y, asserts if the calculation overflows\n\n        @param _x   value 1\n        @param _y   value 2\n\n        @return sum\n    */\n    function safeAdd(uint256 _x, uint256 _y) internal pure returns (uint256) {\n        uint256 z = _x + _y;\n        assert(z >= _x);\n        return z;\n    }\n\n    /**\n        @dev returns the difference of _x minus _y, asserts if the subtraction results in a negative number\n\n        @param _x   minuend\n        @param _y   subtrahend\n\n        @return difference\n    */\n    function safeSub(uint256 _x, uint256 _y) internal pure returns (uint256) {\n        assert(_x >= _y);\n        return _x - _y;\n    }\n\n    /**\n        @dev returns the product of multiplying _x by _y, asserts if the calculation overflows\n\n        @param _x   factor 1\n        @param _y   factor 2\n\n        @return product\n    */\n    function safeMul(uint256 _x, uint256 _y) internal pure returns (uint256) {\n        uint256 z = _x * _y;\n        assert(_x == 0 || z / _x == _y);\n        return z;\n    }\n}\n",
-  "sourcePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/Utils.sol",
+  "sourcePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/Utils.sol",
   "ast": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/Utils.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/Utils.sol",
     "exportedSymbols": {
       "Utils": [
         9203
@@ -1557,7 +1557,7 @@
     "src": "0:1740:34"
   },
   "legacyAST": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/Utils.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/Utils.sol",
     "exportedSymbols": {
       "Utils": [
         9203
@@ -3103,6 +3103,6 @@
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "2.0.1",
-  "updatedAt": "2018-12-19T15:23:21.456Z"
+  "schemaVersion": "3.0.0-beta.0",
+  "updatedAt": "2019-01-02T14:26:53.713Z"
 }

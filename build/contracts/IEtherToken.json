@@ -278,9 +278,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.24;\nimport './IERC20Token.sol';\nimport '../../utility/interfaces/ITokenHolder.sol';\n\n/*\n    Ether Token interface\n*/\ncontract IEtherToken is ITokenHolder, IERC20Token {\n    function deposit() public payable;\n    function withdraw(uint256 _amount) public;\n    function withdrawTo(address _to, uint256 _amount) public;\n}\n",
-  "sourcePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/IEtherToken.sol",
+  "sourcePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/IEtherToken.sol",
   "ast": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/IEtherToken.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/IEtherToken.sol",
     "exportedSymbols": {
       "IEtherToken": [
         8447
@@ -301,7 +301,7 @@
         "src": "0:24:27"
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/IERC20Token.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/IERC20Token.sol",
         "file": "./IERC20Token.sol",
         "id": 8426,
         "nodeType": "ImportDirective",
@@ -312,7 +312,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/ITokenHolder.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/ITokenHolder.sol",
         "file": "../../utility/interfaces/ITokenHolder.sol",
         "id": 8427,
         "nodeType": "ImportDirective",
@@ -554,7 +554,7 @@
     "src": "0:340:27"
   },
   "legacyAST": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/IEtherToken.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/IEtherToken.sol",
     "exportedSymbols": {
       "IEtherToken": [
         8447
@@ -575,7 +575,7 @@
         "src": "0:24:27"
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/IERC20Token.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/token/interfaces/IERC20Token.sol",
         "file": "./IERC20Token.sol",
         "id": 8426,
         "nodeType": "ImportDirective",
@@ -586,7 +586,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/ITokenHolder.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/ITokenHolder.sol",
         "file": "../../utility/interfaces/ITokenHolder.sol",
         "id": 8427,
         "nodeType": "ImportDirective",
@@ -832,6 +832,6 @@
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "2.0.1",
-  "updatedAt": "2018-12-19T15:23:21.452Z"
+  "schemaVersion": "3.0.0-beta.0",
+  "updatedAt": "2019-01-02T14:26:53.688Z"
 }

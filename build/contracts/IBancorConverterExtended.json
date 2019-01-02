@@ -529,9 +529,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.24;\nimport './interfaces/IBancorConverter.sol';\nimport './interfaces/IBancorConverterUpgrader.sol';\nimport './interfaces/IBancorConverterFactory.sol';\nimport '../utility/Owned.sol';\nimport '../utility/interfaces/IContractRegistry.sol';\nimport '../utility/interfaces/IContractFeatures.sol';\nimport '../utility/interfaces/IWhitelist.sol';\nimport '../ContractIds.sol';\nimport '../FeatureIds.sol';\n\n/*\n    Bancor converter dedicated interface\n*/\ncontract IBancorConverterExtended is IBancorConverter, IOwned {\n    function token() public view returns (ISmartToken) {}\n    function maxConversionFee() public view returns (uint32) {}\n    function conversionFee() public view returns (uint32) {}\n    function connectorTokenCount() public view returns (uint16);\n    function reserveTokenCount() public view returns (uint16);\n    function connectorTokens(uint256 _index) public view returns (IERC20Token) { _index; }\n    function reserveTokens(uint256 _index) public view returns (IERC20Token) { _index; }\n    function setConversionWhitelist(IWhitelist _whitelist) public;\n    function transferTokenOwnership(address _newOwner) public;\n    function withdrawTokens(IERC20Token _token, address _to, uint256 _amount) public;\n    function acceptTokenOwnership() public;\n    function transferManagement(address _newManager) public;\n    function acceptManagement() public;\n    function setConversionFee(uint32 _conversionFee) public;\n    function addConnector(IERC20Token _token, uint32 _weight, bool _enableVirtualBalance) public;\n    function updateConnector(IERC20Token _connectorToken, uint32 _weight, bool _enableVirtualBalance, uint256 _virtualBalance) public;\n    function getConnectorBalance(IERC20Token _connectorToken) public view returns (uint256);\n    function getReserveBalance(IERC20Token _reserveToken) public view returns (uint256);\n    function reserves(address _address) public view returns (\n        uint256 virtualBalance, \n        uint32 weight, \n        bool isVirtualBalanceEnabled, \n        bool isPurchaseEnabled, \n        bool isSet\n    );\n}\n\n/*\n    Bancor Converter Upgrader\n\n    The Bancor converter upgrader contract allows upgrading an older Bancor converter\n    contract (0.4 and up) to the latest version.\n    To begin the upgrade process, first transfer the converter ownership to the upgrader\n    contract and then call the upgrade function.\n    At the end of the process, the ownership of the newly upgraded converter will be transferred\n    back to the original owner.\n    The address of the new converter is available in the ConverterUpgrade event.\n*/\ncontract BancorConverterUpgrader is IBancorConverterUpgrader, Owned, ContractIds, FeatureIds {\n    string public version = '0.3';\n\n    IContractRegistry public registry;                      // contract registry contract address\n\n    // triggered when the contract accept a converter ownership\n    event ConverterOwned(address indexed _converter, address indexed _owner);\n    // triggered when the upgrading process is done\n    event ConverterUpgrade(address indexed _oldConverter, address indexed _newConverter);\n\n    /**\n        @dev constructor\n    */\n    constructor(IContractRegistry _registry) public {\n        registry = _registry;\n    }\n\n    /*\n        @dev allows the owner to update the contract registry contract address\n\n        @param _registry   address of a contract registry contract\n    */\n    function setRegistry(IContractRegistry _registry) public ownerOnly {\n        registry = _registry;\n    }\n\n    /**\n        @dev upgrades an old converter to the latest version\n        will throw if ownership wasn't transferred to the upgrader before calling this function.\n        ownership of the new converter will be transferred back to the original owner.\n        fires the ConverterUpgrade event upon success.\n        can only be called by a converter\n\n        @param _version old converter version\n    */\n    function upgrade(bytes32 _version) public {\n        upgradeOld(IBancorConverter(msg.sender), _version);\n    }\n\n    /**\n        @dev upgrades an old converter to the latest version\n        will throw if ownership wasn't transferred to the upgrader before calling this function.\n        ownership of the new converter will be transferred back to the original owner.\n        fires the ConverterUpgrade event upon success.\n\n        @param _converter   old converter contract address\n        @param _version     old converter version\n    */\n    function upgradeOld(IBancorConverter _converter, bytes32 _version) public {\n        bool formerVersions = false;\n        if (_version == \"0.4\")\n            formerVersions = true;\n        IBancorConverterExtended converter = IBancorConverterExtended(_converter);\n        address prevOwner = converter.owner();\n        acceptConverterOwnership(converter);\n        IBancorConverterExtended newConverter = createConverter(converter);\n        copyConnectors(converter, newConverter, formerVersions);\n        copyConversionFee(converter, newConverter);\n        transferConnectorsBalances(converter, newConverter, formerVersions);                \n        ISmartToken token = converter.token();\n\n        if (token.owner() == address(converter)) {\n            converter.transferTokenOwnership(newConverter);\n            newConverter.acceptTokenOwnership();\n        }\n\n        converter.transferOwnership(prevOwner);\n        newConverter.transferOwnership(prevOwner);\n        newConverter.transferManagement(prevOwner);\n\n        emit ConverterUpgrade(address(converter), address(newConverter));\n    }\n\n    /**\n        @dev the first step when upgrading a converter is to transfer the ownership to the local contract.\n        the upgrader contract then needs to accept the ownership transfer before initiating\n        the upgrade process.\n        fires the ConverterOwned event upon success\n\n        @param _oldConverter       converter to accept ownership of\n    */\n    function acceptConverterOwnership(IBancorConverterExtended _oldConverter) private {\n        _oldConverter.acceptOwnership();\n        emit ConverterOwned(_oldConverter, this);\n    }\n\n    /**\n        @dev creates a new converter with same basic data as the original old converter\n        the newly created converter will have no connectors at this step.\n\n        @param _oldConverter    old converter contract address\n\n        @return the new converter  new converter contract address\n    */\n    function createConverter(IBancorConverterExtended _oldConverter) private returns(IBancorConverterExtended) {\n        IWhitelist whitelist;\n        ISmartToken token = _oldConverter.token();\n        uint32 maxConversionFee = _oldConverter.maxConversionFee();\n\n        IBancorConverterFactory converterFactory = IBancorConverterFactory(registry.addressOf(ContractIds.BANCOR_CONVERTER_FACTORY));\n        address converterAddress  = converterFactory.createConverter(\n            token,\n            registry,\n            maxConversionFee,\n            IERC20Token(address(0)),\n            0\n        );\n\n        IBancorConverterExtended converter = IBancorConverterExtended(converterAddress);\n        converter.acceptOwnership();\n        converter.acceptManagement();\n\n        // get the contract features address from the registry\n        IContractFeatures features = IContractFeatures(registry.addressOf(ContractIds.CONTRACT_FEATURES));\n\n        if (features.isSupported(_oldConverter, FeatureIds.CONVERTER_CONVERSION_WHITELIST)) {\n            whitelist = _oldConverter.conversionWhitelist();\n            if (whitelist != address(0))\n                converter.setConversionWhitelist(whitelist);\n        }\n\n        return converter;\n    }\n\n    /**\n        @dev copies the connectors from the old converter to the new one.\n        note that this will not work for an unlimited number of connectors due to block gas limit constraints.\n\n        @param _oldConverter    old converter contract address\n        @param _newConverter    new converter contract address\n        @param _isLegacyVersion true if the converter version is under 0.5\n    */\n    function copyConnectors(IBancorConverterExtended _oldConverter, IBancorConverterExtended _newConverter, bool _isLegacyVersion)\n        private\n    {\n        uint256 virtualBalance;\n        uint32 weight;\n        bool isVirtualBalanceEnabled;\n        bool isPurchaseEnabled;\n        bool isSet;\n        uint16 connectorTokenCount = _isLegacyVersion ? _oldConverter.reserveTokenCount() : _oldConverter.connectorTokenCount();\n\n        for (uint16 i = 0; i < connectorTokenCount; i++) {\n            address connectorAddress = _isLegacyVersion ? _oldConverter.reserveTokens(i) : _oldConverter.connectorTokens(i);\n            (virtualBalance, weight, isVirtualBalanceEnabled, isPurchaseEnabled, isSet) = readConnector(\n                _oldConverter,\n                connectorAddress,\n                _isLegacyVersion\n            );\n\n            IERC20Token connectorToken = IERC20Token(connectorAddress);\n            _newConverter.addConnector(connectorToken, weight, isVirtualBalanceEnabled);\n\n            if (isVirtualBalanceEnabled)\n                _newConverter.updateConnector(connectorToken, weight, isVirtualBalanceEnabled, virtualBalance);\n        }\n    }\n\n    /**\n        @dev copies the conversion fee from the old converter to the new one\n\n        @param _oldConverter    old converter contract address\n        @param _newConverter    new converter contract address\n    */\n    function copyConversionFee(IBancorConverterExtended _oldConverter, IBancorConverterExtended _newConverter) private {\n        uint32 conversionFee = _oldConverter.conversionFee();\n        _newConverter.setConversionFee(conversionFee);\n    }\n\n    /**\n        @dev transfers the balance of each connector in the old converter to the new one.\n        note that the function assumes that the new converter already has the exact same number of\n        also, this will not work for an unlimited number of connectors due to block gas limit constraints.\n\n        @param _oldConverter    old converter contract address\n        @param _newConverter    new converter contract address\n        @param _isLegacyVersion true if the converter version is under 0.5\n    */\n    function transferConnectorsBalances(IBancorConverterExtended _oldConverter, IBancorConverterExtended _newConverter, bool _isLegacyVersion)\n        private\n    {\n        uint256 connectorBalance;\n        uint16 connectorTokenCount = _isLegacyVersion ? _oldConverter.reserveTokenCount() : _oldConverter.connectorTokenCount();\n\n        for (uint16 i = 0; i < connectorTokenCount; i++) {\n            address connectorAddress = _isLegacyVersion ? _oldConverter.reserveTokens(i) : _oldConverter.connectorTokens(i);\n            IERC20Token connector = IERC20Token(connectorAddress);\n            connectorBalance = connector.balanceOf(_oldConverter);\n            _oldConverter.withdrawTokens(connector, address(_newConverter), connectorBalance);\n        }\n    }\n\n    /**\n        @dev returns the connector settings\n\n        @param _converter       old converter contract address\n        @param _address         connector's address to read from\n        @param _isLegacyVersion true if the converter version is under 0.5\n\n        @return connector's settings\n    */\n    function readConnector(IBancorConverterExtended _converter, address _address, bool _isLegacyVersion) \n        private\n        view\n        returns(uint256 virtualBalance, uint32 weight, bool isVirtualBalanceEnabled, bool isPurchaseEnabled, bool isSet)\n    {\n        return _isLegacyVersion ? _converter.reserves(_address) : _converter.connectors(_address);\n    }\n}",
-  "sourcePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/converter/BancorConverterUpgrader.sol",
+  "sourcePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/converter/BancorConverterUpgrader.sol",
   "ast": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/converter/BancorConverterUpgrader.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/converter/BancorConverterUpgrader.sol",
     "exportedSymbols": {
       "BancorConverterUpgrader": [
         4078
@@ -555,7 +555,7 @@
         "src": "0:24:6"
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverter.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverter.sol",
         "file": "./interfaces/IBancorConverter.sol",
         "id": 3419,
         "nodeType": "ImportDirective",
@@ -566,7 +566,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverterUpgrader.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverterUpgrader.sol",
         "file": "./interfaces/IBancorConverterUpgrader.sol",
         "id": 3420,
         "nodeType": "ImportDirective",
@@ -577,7 +577,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverterFactory.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverterFactory.sol",
         "file": "./interfaces/IBancorConverterFactory.sol",
         "id": 3421,
         "nodeType": "ImportDirective",
@@ -588,7 +588,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/Owned.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/Owned.sol",
         "file": "../utility/Owned.sol",
         "id": 3422,
         "nodeType": "ImportDirective",
@@ -599,7 +599,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractRegistry.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractRegistry.sol",
         "file": "../utility/interfaces/IContractRegistry.sol",
         "id": 3423,
         "nodeType": "ImportDirective",
@@ -610,7 +610,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractFeatures.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractFeatures.sol",
         "file": "../utility/interfaces/IContractFeatures.sol",
         "id": 3424,
         "nodeType": "ImportDirective",
@@ -621,7 +621,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IWhitelist.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IWhitelist.sol",
         "file": "../utility/interfaces/IWhitelist.sol",
         "id": 3425,
         "nodeType": "ImportDirective",
@@ -632,7 +632,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/ContractIds.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/ContractIds.sol",
         "file": "../ContractIds.sol",
         "id": 3426,
         "nodeType": "ImportDirective",
@@ -643,7 +643,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/FeatureIds.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/FeatureIds.sol",
         "file": "../FeatureIds.sol",
         "id": 3427,
         "nodeType": "ImportDirective",
@@ -8998,7 +8998,7 @@
     "src": "0:11618:6"
   },
   "legacyAST": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/converter/BancorConverterUpgrader.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/converter/BancorConverterUpgrader.sol",
     "exportedSymbols": {
       "BancorConverterUpgrader": [
         4078
@@ -9022,7 +9022,7 @@
         "src": "0:24:6"
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverter.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverter.sol",
         "file": "./interfaces/IBancorConverter.sol",
         "id": 3419,
         "nodeType": "ImportDirective",
@@ -9033,7 +9033,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverterUpgrader.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverterUpgrader.sol",
         "file": "./interfaces/IBancorConverterUpgrader.sol",
         "id": 3420,
         "nodeType": "ImportDirective",
@@ -9044,7 +9044,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverterFactory.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverterFactory.sol",
         "file": "./interfaces/IBancorConverterFactory.sol",
         "id": 3421,
         "nodeType": "ImportDirective",
@@ -9055,7 +9055,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/Owned.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/Owned.sol",
         "file": "../utility/Owned.sol",
         "id": 3422,
         "nodeType": "ImportDirective",
@@ -9066,7 +9066,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractRegistry.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractRegistry.sol",
         "file": "../utility/interfaces/IContractRegistry.sol",
         "id": 3423,
         "nodeType": "ImportDirective",
@@ -9077,7 +9077,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractFeatures.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractFeatures.sol",
         "file": "../utility/interfaces/IContractFeatures.sol",
         "id": 3424,
         "nodeType": "ImportDirective",
@@ -9088,7 +9088,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IWhitelist.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IWhitelist.sol",
         "file": "../utility/interfaces/IWhitelist.sol",
         "id": 3425,
         "nodeType": "ImportDirective",
@@ -9099,7 +9099,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/ContractIds.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/ContractIds.sol",
         "file": "../ContractIds.sol",
         "id": 3426,
         "nodeType": "ImportDirective",
@@ -9110,7 +9110,7 @@
         "unitAlias": ""
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/FeatureIds.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/FeatureIds.sol",
         "file": "../FeatureIds.sol",
         "id": 3427,
         "nodeType": "ImportDirective",
@@ -17469,6 +17469,6 @@
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "2.0.1",
-  "updatedAt": "2018-12-19T15:23:21.422Z"
+  "schemaVersion": "3.0.0-beta.0",
+  "updatedAt": "2019-01-02T14:26:53.749Z"
 }

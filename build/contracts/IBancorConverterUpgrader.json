@@ -21,9 +21,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.24;\nimport './IBancorConverter.sol';\n\n/*\n    Bancor Converter Upgrader interface\n*/\ncontract IBancorConverterUpgrader {\n    function upgrade(bytes32 _version) public;\n}\n",
-  "sourcePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverterUpgrader.sol",
+  "sourcePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverterUpgrader.sol",
   "ast": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverterUpgrader.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverterUpgrader.sol",
     "exportedSymbols": {
       "IBancorConverterUpgrader": [
         6712
@@ -44,7 +44,7 @@
         "src": "0:24:11"
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverter.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverter.sol",
         "file": "./IBancorConverter.sol",
         "id": 6706,
         "nodeType": "ImportDirective",
@@ -131,7 +131,7 @@
     "src": "0:190:11"
   },
   "legacyAST": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverterUpgrader.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverterUpgrader.sol",
     "exportedSymbols": {
       "IBancorConverterUpgrader": [
         6712
@@ -152,7 +152,7 @@
         "src": "0:24:11"
       },
       {
-        "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverter.sol",
+        "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorConverter.sol",
         "file": "./IBancorConverter.sol",
         "id": 6706,
         "nodeType": "ImportDirective",
@@ -243,6 +243,6 @@
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "2.0.1",
-  "updatedAt": "2018-12-19T15:23:21.444Z"
+  "schemaVersion": "3.0.0-beta.0",
+  "updatedAt": "2019-01-02T14:26:53.685Z"
 }

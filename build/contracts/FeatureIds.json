@@ -16,14 +16,14 @@
       "type": "function"
     }
   ],
-  "bytecode": "0x6080604052348015600f57600080fd5b50609d8061001e6000396000f300608060405260043610603f576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806392d1abb7146044575b600080fd5b348015604f57600080fd5b506056606c565b6040518082815260200191505060405180910390f35b6001815600a165627a7a72305820a8a9d22c21273e61d1c17ffdc8c18b57cf44f716608102bdb476ac0c83c78f810029",
-  "deployedBytecode": "0x608060405260043610603f576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806392d1abb7146044575b600080fd5b348015604f57600080fd5b506056606c565b6040518082815260200191505060405180910390f35b6001815600a165627a7a72305820a8a9d22c21273e61d1c17ffdc8c18b57cf44f716608102bdb476ac0c83c78f810029",
+  "bytecode": "0x6080604052348015600f57600080fd5b50609d8061001e6000396000f300608060405260043610603f576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806392d1abb7146044575b600080fd5b348015604f57600080fd5b506056606c565b6040518082815260200191505060405180910390f35b6001815600a165627a7a72305820cbacce46ba55fc877a414ad6917a1486725ec2c610a266640b41f7217effa0410029",
+  "deployedBytecode": "0x608060405260043610603f576000357c0100000000000000000000000000000000000000000000000000000000900463ffffffff16806392d1abb7146044575b600080fd5b348015604f57600080fd5b506056606c565b6040518082815260200191505060405180910390f35b6001815600a165627a7a72305820cbacce46ba55fc877a414ad6917a1486725ec2c610a266640b41f7217effa0410029",
   "sourceMap": "199:118:2:-;;;;8:9:-1;5:2;;;30:1;27;20:12;5:2;199:118:2;;;;;;;",
   "deployedSourceMap": "199:118:2:-;;;;;;;;;;;;;;;;;;;;;;;;251:63;;8:9:-1;5:2;;;30:1;27;20:12;5:2;251:63:2;;;;;;;;;;;;;;;;;;;;;;;;308:6;251:63;:::o",
   "source": "pragma solidity ^0.4.24;\n\n/**\n    Id definitions for bancor contract features\n\n    Can be used to query the ContractFeatures contract to check whether a certain feature is supported by a contract\n*/\ncontract FeatureIds {\n    // converter features\n    uint256 public constant CONVERTER_CONVERSION_WHITELIST = 1 << 0;\n}\n",
-  "sourcePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/FeatureIds.sol",
+  "sourcePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/FeatureIds.sol",
   "ast": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/FeatureIds.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/FeatureIds.sol",
     "exportedSymbols": {
       "FeatureIds": [
         1314
@@ -144,7 +144,7 @@
     "src": "0:318:2"
   },
   "legacyAST": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/FeatureIds.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/FeatureIds.sol",
     "exportedSymbols": {
       "FeatureIds": [
         1314
@@ -269,6 +269,6 @@
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "2.0.1",
-  "updatedAt": "2018-12-19T15:23:21.404Z"
+  "schemaVersion": "3.0.0-beta.0",
+  "updatedAt": "2019-01-02T14:26:53.686Z"
 }

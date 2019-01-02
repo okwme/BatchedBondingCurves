@@ -35,9 +35,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.24;\n\n/*\n    Bancor Gas Price Limit interface\n*/\ncontract IBancorGasPriceLimit {\n    function gasPrice() public view returns (uint256) {}\n    function validateGasPrice(uint256) public view;\n}\n",
-  "sourcePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorGasPriceLimit.sol",
+  "sourcePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorGasPriceLimit.sol",
   "ast": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorGasPriceLimit.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorGasPriceLimit.sol",
     "exportedSymbols": {
       "IBancorGasPriceLimit": [
         6770
@@ -195,7 +195,7 @@
     "src": "0:212:13"
   },
   "legacyAST": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorGasPriceLimit.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/converter/interfaces/IBancorGasPriceLimit.sol",
     "exportedSymbols": {
       "IBancorGasPriceLimit": [
         6770
@@ -357,6 +357,6 @@
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "2.0.1",
-  "updatedAt": "2018-12-19T15:23:21.445Z"
+  "schemaVersion": "3.0.0-beta.0",
+  "updatedAt": "2019-01-02T14:26:53.686Z"
 }

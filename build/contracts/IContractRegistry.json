@@ -45,9 +45,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.24;\n\n/*\n    Contract Registry interface\n*/\ncontract IContractRegistry {\n    function addressOf(bytes32 _contractName) public view returns (address);\n\n    // deprecated, backward compatibility\n    function getAddress(bytes32 _contractName) public view returns (address);\n}\n",
-  "sourcePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractRegistry.sol",
+  "sourcePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractRegistry.sol",
   "ast": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractRegistry.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractRegistry.sol",
     "exportedSymbols": {
       "IContractRegistry": [
         9392
@@ -254,7 +254,7 @@
     "src": "0:293:37"
   },
   "legacyAST": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractRegistry.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractRegistry.sol",
     "exportedSymbols": {
       "IContractRegistry": [
         9392
@@ -465,6 +465,6 @@
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "2.0.1",
-  "updatedAt": "2018-12-19T15:23:21.457Z"
+  "schemaVersion": "3.0.0-beta.0",
+  "updatedAt": "2019-01-02T14:26:53.687Z"
 }

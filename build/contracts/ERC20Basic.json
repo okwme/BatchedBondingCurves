@@ -85,9 +85,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.21;\n\n\n/**\n * @title ERC20Basic\n * @dev Simpler version of ERC20 interface\n * @dev see https://github.com/ethereum/EIPs/issues/179\n */\ncontract ERC20Basic {\n  function totalSupply() public view returns (uint256);\n  function balanceOf(address who) public view returns (uint256);\n  function transfer(address to, uint256 value) public returns (bool);\n  event Transfer(address indexed from, address indexed to, uint256 value);\n}\n",
-  "sourcePath": "/Users/billy/sol/BatchedBondingCurves/node_modules/zeppelin-solidity/contracts/token/ERC20/ERC20Basic.sol",
+  "sourcePath": "/home/volt/tmp/BatchedBondingCurves/node_modules/zeppelin-solidity/contracts/token/ERC20/ERC20Basic.sol",
   "ast": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/node_modules/zeppelin-solidity/contracts/token/ERC20/ERC20Basic.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/node_modules/zeppelin-solidity/contracts/token/ERC20/ERC20Basic.sol",
     "exportedSymbols": {
       "ERC20Basic": [
         10567
@@ -472,7 +472,7 @@
     "src": "0:445:46"
   },
   "legacyAST": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/node_modules/zeppelin-solidity/contracts/token/ERC20/ERC20Basic.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/node_modules/zeppelin-solidity/contracts/token/ERC20/ERC20Basic.sol",
     "exportedSymbols": {
       "ERC20Basic": [
         10567
@@ -861,6 +861,6 @@
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "2.0.1",
-  "updatedAt": "2018-12-19T15:23:21.469Z"
+  "schemaVersion": "3.0.0-beta.0",
+  "updatedAt": "2019-01-02T14:26:53.690Z"
 }

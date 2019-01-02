@@ -26,9 +26,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.24;\n\n/*\n    Whitelist interface\n*/\ncontract IWhitelist {\n    function isWhitelisted(address _address) public view returns (bool);\n}\n",
-  "sourcePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IWhitelist.sol",
+  "sourcePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IWhitelist.sol",
   "ast": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IWhitelist.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IWhitelist.sol",
     "exportedSymbols": {
       "IWhitelist": [
         9435
@@ -152,7 +152,7 @@
     "src": "0:153:40"
   },
   "legacyAST": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IWhitelist.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IWhitelist.sol",
     "exportedSymbols": {
       "IWhitelist": [
         9435
@@ -280,6 +280,6 @@
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "2.0.1",
-  "updatedAt": "2018-12-19T15:23:21.458Z"
+  "schemaVersion": "3.0.0-beta.0",
+  "updatedAt": "2019-01-02T14:26:53.687Z"
 }

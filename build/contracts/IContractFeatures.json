@@ -48,9 +48,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.24;\n\n/*\n    Contract Features interface\n*/\ncontract IContractFeatures {\n    function isSupported(address _contract, uint256 _features) public view returns (bool);\n    function enableFeatures(uint256 _features, bool _enable) public;\n}\n",
-  "sourcePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractFeatures.sol",
+  "sourcePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractFeatures.sol",
   "ast": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractFeatures.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractFeatures.sol",
     "exportedSymbols": {
       "IContractFeatures": [
         9375
@@ -282,7 +282,7 @@
     "src": "0:255:36"
   },
   "legacyAST": {
-    "absolutePath": "/Users/billy/sol/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractFeatures.sol",
+    "absolutePath": "/home/volt/tmp/BatchedBondingCurves/contracts/BancorContracts/utility/interfaces/IContractFeatures.sol",
     "exportedSymbols": {
       "IContractFeatures": [
         9375
@@ -518,6 +518,6 @@
     "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "2.0.1",
-  "updatedAt": "2018-12-19T15:23:21.457Z"
+  "schemaVersion": "3.0.0-beta.0",
+  "updatedAt": "2019-01-02T14:26:53.688Z"
 }
