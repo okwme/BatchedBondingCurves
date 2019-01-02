@@ -118,7 +118,7 @@ contract('BatchBondedToken', async function(accounts) {
 
       assert(init, 'should be init')
       assert(buysCleared, 'we just cleared it')
-      assert(!sellsCleared, 'false because no sells')
+      assert(sellsCleared, 'we cleared')
       assert(cleared, 'we cleared')
 
       // did a hard calculation, should change to compute
@@ -131,7 +131,7 @@ contract('BatchBondedToken', async function(accounts) {
       
       assert(
         totalBuySpend.toString() === totalSpent,
-        'total spent on buys is the total spent'
+        `these values should equal - totalBuySpend = ${totalBuySpend} | totalSpent = ${totalSpent}`,
       )
 
       assert(
@@ -179,6 +179,81 @@ contract('BatchBondedToken', async function(accounts) {
         'all tokens have been distributed'
       )
     })
+    it('does some concurrent buy and sells', async function() {
+      // we section off accounts[0:5] as sellers and accounts[6:9]
+      // will buy again
+      //
+      // reset to new batch
+      await increaseBlocks(51)
+
+      const zeroIdxBal = await bbt.balanceOf(accounts[0])
+      assert(
+        zeroIdxBal.toString() !== '0',
+        'should have some tokens from buying them before',
+      )
+      const addSellTx = await bbt.addSell(zeroIdxBal.toString())
+      console.log(_ + addSellTx.receipt.gasUsed + ' - .addSell() gas used')
+      await Promise.all(
+        accounts.map(async (acc, idx) => {
+          if (idx === 0) return;
+          else if (idx < 6) {
+            const bal = await bbt.balanceOf(acc)
+            // console.log(idx)
+            // console.log(bal.toString())
+            const tx = await bbt.addSell(bal.toString(), { from: acc })
+            assert(tx.receipt.status)
+          } else {
+            const tx = await bbt.addBuy(acc, {
+              from: acc,
+              value: web3.utils.toWei('0.1', 'ether'),
+            })
+            assert(tx.receipt.status)
+          }
+        })
+      )
+      //
+      // clear this batch
+      let wc = await bbt.waitingClear()
+      let cb = await bbt.currentBatch()
+      await increaseBlocks(50)
+      assert(
+        wc.toNumber() === cb.toNumber(),
+        'there must be a batch waiting to be cleared',
+      )
+      await bbt.clearBatch()
+      wc = await bbt.waitingClear()
+      assert(
+        wc.toNumber() === 0,
+        'no longer a batch to be cleared',
+      )
+      // cool, hard part done
+      //
+      // check that accounts 0 - 5 have no tokens
+      // and claim
+      for (let i = 0; i < 6; i++) {
+        let bal = await bbt.balanceOf(accounts[i])
+        assert(
+          bal.toString() === '0',
+          `account ${i} burned all of their tokens`,
+        )
+        let claimSellTx = await bbt.claimSell(cb, accounts[i])
+        if (i === 0) {
+          console.log(_ + claimSellTx.receipt.gasUsed + ' - .claimSell() gas used')
+        }
+        assert(
+          claimSellTx.receipt.status === true,
+          'claimed sell successful',
+        )
+      }
+      for (let i = 6; i < 10; i++) {
+        let claimBuyTx = await bbt.claimBuy(cb, accounts[i])
+        assert(
+          claimBuyTx.receipt.status === true,
+          'claimed buy successful',
+        )
+      }
+    })
+    // TODO accounting tests
   })
 })
 
