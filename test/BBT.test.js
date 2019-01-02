@@ -5,7 +5,7 @@ let gasPrice = 1000000000 // 1GWEI
 let _ = '        '
 
 let bbtOpts = {
-  name: "Big Batch Token",
+  name: "Batch Bonded Token",
   symbol: "BBT",
   decimals: 18,
   batchBlocks: 50,
