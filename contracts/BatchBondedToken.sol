@@ -139,7 +139,7 @@ contract BatchBondedToken is StandardToken, BancorFormula {
     }
     function clearSales() internal {
         Batch storage cb = batches[waitingClear]; // clearing batch
-        if (cb.sellsCleared) {
+        if (!cb.sellsCleared) {
             cb.totalSellReturn = getSell(cb.totalSupply, cb.poolBalance, cb.totalSellSpend);
             cb.totalSupply = cb.totalSupply.sub(cb.totalSellSpend);
             cb.poolBalance = cb.poolBalance.sub(cb.totalSellReturn);
