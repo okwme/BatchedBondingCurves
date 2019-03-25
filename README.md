@@ -1,4 +1,5 @@
 
+# Batched Bonding Curves
 
 this repo begins with the problem of front-running bonding curve token transactions. There are a number of ways to mitigate this risk. One method is including a `minReturn` amount that cancels an order if the results are not expected (a symptom of a front running scenario). This however is a UX problem as a user will be faced with a canceled order in the event someone attempted to front run them, when really they just wanted an order to go through. Another solution is to make a fixed `gasPrice` where each transaction is forced to have the same amount of gas. This would prevent nefarious transactions from getting preference from miners in order to jump the line in the block order and front run orders. This would be a moot point if it were the miners themselves who were doing the front running, as they could always give preference to their own transactions. Furthermore it creates developer overhead to keep track of average gas prices so you don't force a user to use a price which will never be accepted, or you force a user to waste money on an overinflated gas price.
 
@@ -15,3 +16,6 @@ If the sell orders were positioned first, each sell order would progressively lo
 In the case where the buys were calculated first, the price per token would have increased by the end of the transactions. This would mean that the sellers who would follow would be happily surprised to see that their previously calculated sell price would be actually improved by that activity. All of the new collateral injected by the buyers would be effectively transferred to the sellers, who are not contributing to the system since they remove capital with them when they leave.
 
 In conclusion, it would make sense to combine all the sells into one order, then split it among the participants of the sell. Then combine all of the buy orders into one, then split it among the buyers. This would create a consistent and fair pricing mechanism. Furthermore it would position buyers to benefit from the group action over sellers, who should not be, in general, further rewarded while exiting. This entire mechanism would remove the ability to front run orders, while also preventing massive slippage between orders during a mass exit.
+
+
+To read more please see [Batched Bonding Curves Observable](https://beta.observablehq.com/@okwme/batched-bonding-curves) or the [Medium](https://medium.com/@billyrennekamp/batched-bonding-curves-ce69a57d8ae4).
