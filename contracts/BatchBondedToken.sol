@@ -134,7 +134,7 @@ contract BatchBondedToken is StandardToken, BancorFormula {
     // totalSupply is decremented
     // balance remains the same
     function addSell(uint256 amount) public returns(bool) {
-        require(balanceOf(msg.sender) >= amount, "insufficient funds to do that");
+        require(balanceOf(msg.sender) >= amount, "insufficient funds for sell order");
         uint256 batch = currentBatch();
         Batch storage cb = batches[batch]; // currentBatch
         if (!cb.init) {
@@ -284,17 +284,17 @@ contract BatchBondedToken is StandardToken, BancorFormula {
         }
     }
     function claimSell(uint256 batch, address sender) public {
-        Batch storage cb = batches[batch]; // claming batch
+        Batch storage cb = batches[batch]; // claiming batch
         require(cb.cleared, "can't claim a batch that hasn't cleared");
-        require(cb.sellers[sender] != 0, "already claimed this sell");
+        require(cb.sellers[sender] != 0, "this address has no sell to claim");
         uint256 individualSellReturn = (cb.totalSellReturn.mul(cb.sellers[sender])).div(cb.totalSellSpend);
         cb.sellers[sender] = 0;
         sender.transfer(individualSellReturn);
     }
     function claimBuy(uint256 batch, address sender) public {
-        Batch storage cb = batches[batch]; // claming batch
+        Batch storage cb = batches[batch]; // claiming batch
         require(cb.cleared, "can't claim a batch that hasn't cleared");
-        require(cb.buyers[sender] != 0, "already claimed this buy");
+        require(cb.buyers[sender] != 0, "this address has no buy to claim");
         uint256 individualBuyReturn = (cb.buyers[sender].mul(cb.totalBuyReturn)).div(cb.totalBuySpend);
         cb.buyers[sender] = 0;
         require(_burn(this, individualBuyReturn), "burn must succeed to close claim");
