@@ -1,3 +1,6 @@
+# WARNING: This code is deprecated and out of date. Further work on this implementation can be seen at https://github.com/aragonblack/fundraising
+---
+
 
 # Batched Bonding Curves
 
